@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кликер - Результаты</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4a6fa5;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .restart-btn {
+            padding: 10px 20px;
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .restart-btn:hover {
+            background-color: #3a5a80;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Таблица рекордов</h1>
+        
+        <table id="leaderboard">
+            <tr>
+                <th>Место</th>
+                <th>Имя</th>
+                <th>Счёт</th>
+            </tr>
+            <!-- Здесь будут динамически добавляться результаты -->
+        </table>
+        
+        <button class="restart-btn" onclick="restartGame()">Играть снова</button>
+    </div>
+
+    <script>
+        // Получаем последний результат
+        const lastScore = localStorage.getItem('lastScore') || 0;
+        const playerName = localStorage.getItem('playerName') || 'Игрок';
+        
+        // Получаем или создаем таблицу лидеров
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        
+        // Добавляем текущий результат
+        leaderboard.push({
+            name: playerName,
+            score: parseInt(lastScore)
+        });
+        
+        // Сортируем по убыванию счета
+        leaderboard.sort((a, b) => b.score - a.score);
+        
+        // Оставляем только топ-5
+        leaderboard = leaderboard.slice(0, 5);
+        
+        // Сохраняем обновленную таблицу лидеров
+        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        
+        // Отображаем таблицу лидеров
+        const table = document.getElementById('leaderboard');
+        leaderboard.forEach((player, index) => {
+            const row = table.insertRow();
+            row.insertCell(0).textContent = index + 1;
+            row.insertCell(1).textContent = player.name;
+            row.insertCell(2).textContent = player.score;
+        });
+        
+        // Функция для перезапуска игры
+        function restartGame() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
