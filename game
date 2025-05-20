@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кликер - Игра</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e6f7ff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #4a6fa5;
+            color: white;
+        }
+        .target {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, red, darkred);
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .exit-btn {
+            padding: 8px 15px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .exit-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-header">
+        <div id="playerDisplay">Игрок: </div>
+        <div id="timer">00:30</div>
+        <div id="score">Счёт: 0</div>
+        <button class="exit-btn" onclick="endGame()">Выход</button>
+    </div>
+
+    <div class="target" id="target"></div>
+
+    <script>
+        // Получаем имя игрока
+        const playerName = localStorage.getItem('playerName') || 'Игрок';
+        document.getElementById('playerDisplay').textContent = `Игрок: ${playerName}`;
+        
+        let score = 0;
+        let timeLeft = 30;
+        let gameInterval;
+        
+        // Инициализация игры
+        function initGame() {
+            moveTarget();
+            gameInterval = setInterval(updateGame, 1000);
+        }
+        
+        // Обновление игры
+        function updateGame() {
+            timeLeft--;
+            document.getElementById('timer').textContent = 
+                `00:${timeLeft < 10 ? '0' + timeLeft : timeLeft}`;
+            
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+        
+        // Перемещение цели
+        function moveTarget() {
+            const target = document.getElementById('target');
+            const maxX = window.innerWidth - 100;
+            const maxY = window.innerHeight - 100;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            target.style.left = `${randomX}px`;
+            target.style.top = `${randomY}px`;
+        }
+        
+        // Обработка клика по цели
+        document.getElementById('target').addEventListener('click', function() {
+            score++;
+            document.getElementById('score').textContent = `Счёт: ${score}`;
+            moveTarget();
+        });
+        
+        // Завершение игры
+        function endGame() {
+            clearInterval(gameInterval);
+            localStorage.setItem('lastScore', score);
+            window.location.href = 'results.html';
+        }
+        
+        // Запуск игры при загрузке страницы
+        window.onload = initGame;
+    </script>
+</body>
+</html>
