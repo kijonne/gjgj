@@ -1,0 +1,131 @@
+# Решение дополнительных заданий по верстке сайтов с PHP
+
+## 1.1 Логические операции для двух чисел
+
+<?php
+$a = 4;
+$b = 5;
+
+echo "<div style='color: red;'>$a | $b = " . ($a | $b) . "</div>"; // Побитовое ИЛИ
+echo "<div style='color: blue;'>$a & $b = " . ($a & $b) . "</div>"; // Побитовое И
+echo "<div style='color: green;'>$a ^ $b = " . ($a ^ $b) . "</div>"; // Побитовое исключающее ИЛИ
+echo "<div style='color: purple;'>~$a = " . (~$a) . "</div>"; // Побитовое отрицание
+echo "<div style='color: orange;'>$a << 1 = " . ($a << 1) . "</div>"; // Сдвиг влево
+echo "<div style='color: brown;'>$a >> 1 = " . ($a >> 1) . "</div>"; // Сдвиг вправо
+?>
+## 1.2 Пары на сегодняшний день
+
+<?php
+$pairs = [
+    "1. Математика (9:00-10:30)",
+    "2. Физика (10:40-12:10)",
+    "3. Программирование (12:20-13:50)",
+    "4. Обед (14:00-15:00)",
+    "5. Английский (15:10-16:40)"
+];
+
+echo "<ul>";
+foreach ($pairs as $pair) {
+    echo "<li>$pair</li>";
+}
+echo "</ul>";
+?>
+## 1.3 Сложение строк
+
+<?php
+$str1 = "Привет, ";
+$str2 = "мир!";
+$str3 = " Как дела?";
+
+$result = $str1 . $str2 . $str3;
+echo $result; // Выведет: Привет, мир! Как дела?
+?>
+## 1.4 Проверка на простое число
+
+<?php
+function isPrime($n) {
+    if ($n <= 1) return false;
+    for ($i = 2; $i <= sqrt($n); $i++) {
+        if ($n % $i == 0) return false;
+    }
+    return true;
+}
+
+$num = 17;
+echo "$num " . (isPrime($num) ? "простое" : "не простое") . " число";
+?>
+## 1.5 Операции со строкой
+
+<?php
+$str = "  Hello, World!  ";
+
+echo "Длина: " . strlen($str) . "<br>";
+echo "Без пробелов: '" . trim($str) . "'<br>";
+echo "Символ 'W' на позиции: " . strpos($str, 'W') . "<br>";
+echo "Без 'l': " . str_replace('l', '', $str) . "<br>";
+echo "Перевернутая: " . strrev($str) . "<br>";
+echo "Сравнение: " . strcmp($str, "Hello") . "<br>";
+echo "Верхний регистр: " . strtoupper($str) . "<br>";
+echo "Нижний регистр: " . strtolower($str) . "<br>";
+echo "Замена: " . str_replace("World", "PHP", $str) . "<br>";
+?>
+## 1.6 Темная/светлая тема по времени
+
+<?php
+$hour = date('H');
+if ($hour >= 18 || $hour <= 6) {
+    echo '<style>body {background: #222; color: #fff;}</style>';
+} else {
+    echo '<style>body {background: #fff; color: #000;}</style>';
+}
+?>
+## 1.7 Вычисление функции
+
+<?php
+$a = 16; $b = 9; $c = 4;
+
+$y = (sqrt($a - $c) / sqrt(($a + 2) * ($b + 4))) - ($c**2 / (3 * $a));
+echo "y = " . round($y, 4);
+?>
+## 1.8 Математические функции
+
+<?php
+echo "PI: " . pi() . "<br>";
+echo "Максимум: " . max(2, 5, 1, 8, 3) . "<br>";
+echo "Минимум: " . min(2, 5, 1, 8, 3) . "<br>";
+echo "Корень из 16: " . sqrt(16) . "<br>";
+echo "Модуль -5: " . abs(-5) . "<br>";
+echo "Округление 3.6: " . round(3.6) . "<br>";
+echo "Из 8-ричной: " . octdec('12') . "<br>";
+?>
+## 1.9 Слайд-шоу
+
+<div id="slideshow">
+    <?php
+    $images = ['img1.jpg', 'img2.jpg', 'img3.jpg'];
+    foreach ($images as $img) {
+        echo "<img src='$img' class='slide' style='display:none;'>";
+    }
+    ?>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+slides[current].style.display = 'block';
+
+setInterval(() => {
+    slides[current].style.display = 'none';
+    current = (current + 1) % slides.length;
+    slides[current].style.display = 'block';
+}, 3000);
+</script>
+## Дополнительные пояснения:
+
+1. Для 1.1 используются побитовые операции с разными цветами вывода
+2. В 1.2 можно динамически генерировать расписание из базы данных
+3. В 1.4 проверка простоты числа выполняется до квадратного корня числа
+4. Для 1.6 можно добавить переключатель тем для пользователя
+5. В 1.9 JavaScript обеспечивает автоматическую смену изображений каждые 3 секунды
+
+Все примеры готовы к использованию - просто скопируйте код в соответствующие PHP-файлы.
