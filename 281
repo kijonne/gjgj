@@ -1,0 +1,66 @@
+<?php
+$a = 5;
+$b = 3;
+
+echo "<span style='color: red;'>$a | $b = " . ($a | $b) . "</span><br>";
+echo "<span style='color: blue;'>$a & $b = " . ($a & $b) . "</span><br>";
+echo "<span style='color: green;'>$a ^ $b = " . ($a ^ $b) . "</span><br>";
+echo "<span style='color: purple;'>~$a = " . ~$a . "</span><br>";
+echo "<span style='color: orange;'>$a << 1 = " . ($a << 1) . "</span><br>";
+echo "<span style='color: brown;'>$a >> 1 = " . ($a >> 1) . "</span><br>";
+?>
+
+<?php
+$a = 10;
+$b = 2;
+$x = $a / $b;
+print "$a/$b=$x";
+?>
+
+
+<?php
+$name = "Иван";
+$age = 25;
+$city = "Москва";
+
+// С конкатенацией
+echo "Меня зовут " . $name . ", мне " . $age . " лет, я живу в " . $city . ".<br>";
+
+// С интерполяцией
+echo "Меня зовут $name, мне $age лет, я живу в $city.<br>";
+
+// С использованием print
+print "Меня зовут $name, мне $age лет, я живу в $city.";
+?>
+
+
+<?php
+$a = 7;
+$b = 3;
+$x = $a / $b;
+printf("%d/%d=%.3f", $a, $b, $x);
+?>
+
+<?php
+$date = getdate();
+printf("%02d:%02d:%04d", $date['mday'], $date['mon'], $date['year']);
+?>
+
+
+<?php
+$str = "Hello";
+printf("%' -20s", $str); // Дополнит строку пробелами до 20 символов
+?>
+
+
+<?php
+$a = 5;
+$b = 3;
+
+printf("%b | %b = %b<br>", $a, $b, $a | $b);
+printf("%b & %b = %b<br>", $a, $b, $a & $b);
+printf("%b ^ %b = %b<br>", $a, $b, $a ^ $b);
+printf("~%b = %b<br>", $a, ~$a);
+printf("%b << 1 = %b<br>", $a, $a << 1);
+printf("%b >> 1 = %b<br>", $a, $a >> 1);
+?>
