@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дополнительное задание</title>
+</head>
+<body>
+    <h1>Дополнительное задание</h1>
+    
+    <h2>1.1 Работа с массивом</h2>
+    <?php
+    $array = [5, 3, 8, 1, 9, 4];
+    echo "<p>Исходный массив: " . implode(', ', $array) . "</p>";
+    
+    // Сумма элементов
+    $sum = array_sum($array);
+    echo "<p>Сумма элементов: " . $sum . "</p>";
+    
+    // Среднее значение
+    $average = $sum / count($array);
+    echo "<p>Среднее значение: " . $average . "</p>";
+    
+    // Максимальный и минимальный элемент
+    $max = max($array);
+    $min = min($array);
+    echo "<p>Максимальный элемент: " . $max . "</p>";
+    echo "<p>Минимальный элемент: " . $min . "</p>";
+    
+    // Сортировка по возрастанию
+    $ascending = $array;
+    sort($ascending);
+    echo "<p>Отсортированный по возрастанию: " . implode(', ', $ascending) . "</p>";
+    
+    // Сортировка по убыванию
+    $descending = $array;
+    rsort($descending);
+    echo "<p>Отсортированный по убыванию: " . implode(', ', $descending) . "</p>";
+    ?>
+    
+    <h2>1.2 Шифр Цезаря</h2>
+    <?php
+    function caesarCipher($str, $shift) {
+        $result = "";
+        for ($i = 0; $i < strlen($str); $i++) {
+            $char = $str[$i];
+            if (ctype_upper($char)) {
+                $result .= chr((ord($char) + $shift - 65) % 26 + 65);
+            } elseif (ctype_lower($char)) {
+                $result .= chr((ord($char) + $shift - 97) % 26 + 97);
+            } else {
+                $result .= $char;
+            }
+        }
+        return $result;
+    }
+    
+    $originalString = "Hello, World!";
+    $shift = 3;
+    $encryptedString = caesarCipher($originalString, $shift);
+    echo "<p>Исходная строка: " . $originalString . "</p>";
+    echo "<p>Зашифрованная строка (сдвиг на " . $shift . "): " . $encryptedString . "</p>";
+    ?>
+    
+    <h2>1.3 Текущая дата и время</h2>
+    <?php
+    $currentDateTime = date('Y-m-d H:i:s');
+    echo "<div style='text-align: center;'><p>Текущая дата и время: " . $currentDateTime . "</p></div>";
+    ?>
+    
+    <h2>1.4 Случайный массив</h2>
+    <?php
+    $randomArray = [];
+    for ($i = 0; $i < 10; $i++) {
+        $randomArray[] = rand(1, 100);
+    }
+    echo "<p>Случайный массив: " . implode(', ', $randomArray) . "</p>";
+    ?>
+    
+    <h2>1.5 Проверка переменной</h2>
+    <?php
+    $variable = "123";
+    echo "<p>Переменная: " . $variable . "</p>";
+    
+    echo "<p>Является числом: " . (is_numeric($variable) ? 'Да' : 'Нет') . "</p>";
+    echo "<p>Является массивом: " . (is_array($variable) ? 'Да' : 'Нет') . "</p>";
+    echo "<p>Является строкой: " . (is_string($variable) ? 'Да' : 'Нет') . "</p>";
+    echo "<p>Пустая: " . (empty($variable) ? 'Да' : 'Нет') . "</p>";
+    echo "<p>Существует: " . (isset($variable) ? 'Да' : 'Нет') . "</p>";
+    echo "<p>Приведено к целому типу: " . (int)$variable . "</p>";
+    ?>
+</body>
+</html>
