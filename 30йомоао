@@ -1,0 +1,156 @@
+# Практическая работа №30 - Разработка PHP-сценариев с циклическими операторами
+
+## Решение заданий
+
+### 5.1 Подсчет цифр и суммы цифр числа
+**Файл: `number_analyzer.php`**
+```php
+<?php
+function analyzeNumber($n) {
+    $count = 0;
+    $sum = 0;
+    $number = abs($n); // Работаем с абсолютным значением
+    
+    do {
+        $sum += $number % 10;
+        $number = (int)($number / 10);
+        $count++;
+    } while ($number > 0);
+    
+    return "Число $n содержит $count цифр, сумма цифр: $sum";
+}
+
+// Пример использования
+$number = 12345;
+echo analyzeNumber($number);
+?>
+```
+
+### 5.2 Таблица умножения
+**Файл: `multiplication_table.php`**
+```php
+<?php
+function printMultiplicationTable() {
+    echo "<table border='1'>";
+    for ($i = 1; $i <= 10; $i++) {
+        echo "<tr>";
+        for ($j = 1; $j <= 10; $j++) {
+            echo "<td>" . $i * $j . "</td>";
+        }
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+// Вывод таблицы
+printMultiplicationTable();
+?>
+```
+
+### 5.3 Возведение в степень
+**Файл: `power_calculator.php`**
+```php
+<?php
+function calculatePower($a, $x) {
+    $result = 1;
+    $negative = false;
+    
+    if ($x < 0) {
+        $negative = true;
+        $x = -$x;
+    }
+    
+    for ($i = 0; $i < $x; $i++) {
+        $result *= $a;
+    }
+    
+    return $negative ? 1/$result : $result;
+}
+
+// Пример использования
+$a = 2;
+$x = 5;
+echo "$a^$x = " . calculatePower($a, $x);
+?>
+```
+
+### 5.4 Список фруктов
+**Файл: `fruits_list.php`**
+```php
+<?php
+function printFruitsList() {
+    $fruits = ["Яблоко", "Банан", "Апельсин", "Киви", "Манго"];
+    
+    echo "<ul>";
+    foreach ($fruits as $fruit) {
+        echo "<li>$fruit</li>";
+    }
+    echo "</ul>";
+}
+
+// Вывод списка
+printFruitsList();
+?>
+```
+
+### 5.5 Таблица пользователей
+**Файл: `users_table.php`**
+```php
+<?php
+function printUsersTable() {
+    $users = [
+        ["name" => "Иван", "email" => "ivan@example.com"],
+        ["name" => "Мария", "email" => "maria@example.com"],
+        ["name" => "Алексей", "email" => "alex@example.com"]
+    ];
+    
+    echo "<table border='1'>";
+    echo "<tr><th>Имя</th><th>E-mail</th></tr>";
+    foreach ($users as $user) {
+        echo "<tr>";
+        echo "<td>" . $user['name'] . "</td>";
+        echo "<td>" . $user['email'] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+// Вывод таблицы
+printUsersTable();
+?>
+```
+
+## Подключение модулей к основному файлу
+**Файл: `index.php`**
+```php
+<?php
+// Подключение модулей
+require_once 'number_analyzer.php';
+require_once 'multiplication_table.php';
+require_once 'power_calculator.php';
+require_once 'fruits_list.php';
+require_once 'users_table.php';
+
+echo "<h2>Результаты работы модулей:</h2>";
+
+echo "<h3>5.1 Анализ числа:</h3>";
+echo analyzeNumber(12345);
+
+echo "<h3>5.2 Таблица умножения:</h3>";
+printMultiplicationTable();
+
+echo "<h3>5.3 Возведение в степень:</h3>";
+echo calculatePower(2, 5);
+
+echo "<h3>5.4 Список фруктов:</h3>";
+printFruitsList();
+
+echo "<h3>5.5 Таблица пользователей:</h3>";
+printUsersTable();
+?>
+```
+
+## Ответы на контрольные вопросы
+
+### 8.1 Отличие циклов с постусловием и предусловием
+Цикл с предусловием (while) сначала проверяет условие, затем выполняет тело. Цикл с постусловием (do-while) сначала выполняет тело, затем проверяет услови
