@@ -1,0 +1,27 @@
+<?php
+function checkLeapYear($year, $month) {
+    $isLeap = ($year % 400 == 0) || ($year % 100 != 0 && $year % 4 == 0);
+    
+    switch($month) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            $days = 31;
+            break;
+        case 4: case 6: case 9: case 11:
+            $days = 30;
+            break;
+        case 2:
+            $days = $isLeap ? 29 : 28;
+            break;
+        default:
+            $days = "Неверный месяц";
+    }
+    
+    return "Год $year " . ($isLeap ? "високосный" : "не високосный") . 
+           ", в месяце $month дней: $days";
+}
+
+// Пример использования
+$year = 2024;
+$month = 2;
+echo checkLeapYear($year, $month);
+?>
