@@ -1,0 +1,166 @@
+# Практическая работа №31: Разработка функций на PHP
+
+## Решение заданий
+
+### MathLibrary.php
+
+```php
+<?php
+// 5.1 Основные математические функции
+function add($a, $b) {
+    return $a + $b;
+}
+
+function subtract($a, $b) {
+    return $a - $b;
+}
+
+function multiply($a, $b) {
+    return $a * $b;
+}
+
+function divide($a, $b) {
+    if ($b == 0) {
+        return "Ошибка: деление на ноль!";
+    }
+    return $a / $b;
+}
+
+function power($base, $exponent) {
+    return pow($base, $exponent);
+}
+
+function factorial($n) {
+    if ($n < 0) {
+        return "Ошибка: факториал отрицательного числа не определен!";
+    }
+    $result = 1;
+    for ($i = 2; $i <= $n; $i++) {
+        $result *= $i;
+    }
+    return $result;
+}
+
+// 5.3 Функция help
+function help($functionName) {
+    $functionsInfo = [
+        'add' => 'Сложение двух чисел: add($a, $b)',
+        'subtract' => 'Вычитание двух чисел: subtract($a, $b)',
+        'multiply' => 'Умножение двух чисел: multiply($a, $b)',
+        'divide' => 'Деление двух чисел: divide($a, $b)',
+        'power' => 'Возведение в степень: power($base, $exponent)',
+        'factorial' => 'Факториал числа: factorial($n)',
+        'sum' => 'Сумма произвольного количества чисел: sum(...$numbers)',
+        'greet' => 'Приветствие пользователя: greet($name = "Гость")',
+        'strictMultiply' => 'Строгое умножение целых чисел: strictMultiply(int $a, int $b)',
+        'getUserData' => 'Получение данных пользователя: getUserData()',
+        'recursivePower' => 'Рекурсивное возведение в степень: recursivePower($base, $exponent)'
+    ];
+    
+    return $functionsInfo[$functionName] ?? "Функция $functionName не найдена в библиотеке.";
+}
+
+// 5.4 Функция info
+function info() {
+    echo "<h2>MathLibrary v1.0</h2>";
+    echo "<p>Библиотека математических функций на PHP</p>";
+    echo "<p>Разработчик: [Ваше имя]</p>";
+    echo "<p>Дата создания: " . date('d.m.Y') . "</p>";
+}
+
+// 5.5 Функция sum с переменным числом аргументов
+function sum(...$numbers) {
+    return array_sum($numbers);
+}
+
+// 5.6 Функция приветствия
+function greet($name = "Гость") {
+    echo "Привет, $name! Добро пожаловать на наш сайт!";
+}
+
+// 5.7 Функция с строгой типизацией
+function strictMultiply(int $a, int $b) {
+    return $a * $b;
+}
+
+// 5.8 Функция получения данных пользователя
+function getUserData() {
+    return [
+        'name' => 'Иван Иванов',
+        'age' => 30,
+        'email' => 'ivan@example.com'
+    ];
+}
+
+// 5.9 Рекурсивная функция возведения в степень
+function recursivePower($base, $exponent) {
+    if ($exponent == 0) {
+        return 1;
+    }
+    return $base * recursivePower($base, $exponent - 1);
+}
+
+// 5.10 Проверка существования функции перед вызовом
+function safeCall($functionName, ...$args) {
+    if (function_exists($functionName)) {
+        return call_user_func_array($functionName, $args);
+    }
+    return "Функция $functionName не существует.";
+}
+?>
+```
+
+### Основной модуль для тестирования (main.php)
+
+```php
+<?php
+require_once 'MathLibrary.php';
+
+// Тестирование основных математических функций
+echo "5 + 3 = " . add(5, 3) . "<br>";
+echo "10 - 4 = " . subtract(10, 4) . "<br>";
+echo "7 * 6 = " . multiply(7, 6) . "<br>";
+echo "15 / 3 = " . divide(15, 3) . "<br>";
+echo "2 ^ 8 = " . power(2, 8) . "<br>";
+echo "5! = " . factorial(5) . "<br><br>";
+
+// Тестирование функции help
+echo help('add') . "<br>";
+echo help('factorial') . "<br>";
+echo help('unknown') . "<br><br>";
+
+// Тестирование функции info
+info();
+echo "<br><br>";
+
+// Тестирование функции sum
+echo "Сумма чисел: " . sum(1, 2, 3, 4, 5) . "<br><br>";
+
+// Тестирование функции greet
+greet();
+echo "<br>";
+greet("Алексей");
+echo "<br><br>";
+
+// Тестирование строгой типизации
+echo "Умножение целых: " . strictMultiply(5, 3) . "<br>";
+// echo strictMultiply(5.5, 3); // Вызовет ошибку TypeError
+echo "<br>";
+
+// Тестирование getUserData
+$user = getUserData();
+echo "Пользователь: {$user['name']}, Возраст: {$user['age']}, Email: {$user['email']}<br><br>";
+
+// Тестирование рекурсивного возведения в степень
+echo "2^5 (рекурсивно) = " . recursivePower(2, 5) . "<br><br>";
+
+// Тестирование безопасного вызова функций
+echo safeCall('add', 10, 20) . "<br>";
+echo safeCall('unknown', 10, 20) . "<br>";
+?>
+```
+
+## Ответы на контрольные вопросы
+
+8.1 **Что такое «библиотека»?**  
+Библиотека - это набор предварительно написанных функций, классов и других программных компонентов, которые можно повторно использовать
