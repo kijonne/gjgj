@@ -1,0 +1,92 @@
+# Решения дополнительного задания по регулярным выражениям
+
+## Задание 1.1
+```php
+<?php
+$text = "Привет! Как дела? Все хорошо... Надеюсь, что да. До свидания!";
+
+// Разделение текста на предложения
+$sentences = preg_split('/(?<=[.!?…])\s+/u', $text, -1, PREG_SPLIT_NO_EMPTY);
+
+echo "Разделенные предложения:<br>";
+foreach ($sentences as $sentence) {
+    echo htmlspecialchars($sentence) . "<br>";
+}
+?>
+```
+
+## Задание 1.2
+```php
+<?php
+$text = "Этот Петя - настоящая редиска! А его друг вообще нехороший человек. Эти редиски и нехорошие люди портят настроение.";
+
+// Замена слов и фраз
+$pattern = '/редиск[а-яё]*|нехорош(ий|ая|ее|ие) человек(а|у|ом|е|ами|ах)?/iu';
+$replaced = preg_replace($pattern, '*давайте жить дружно*', $text);
+
+echo "Оригинальный текст: $text<br>";
+echo "Измененный текст: $replaced";
+?>
+```
+
+## Задание 1.3
+```php
+<?php
+$text = "Вот несколько файлов: image1.jpg, document.pdf, photo2.JPG, picture.png, image3.JpG";
+
+// Поиск всех .jpg файлов (регистронезависимо)
+preg_match_all('/\b\w+\.jpg\b/i', $text, $matches);
+
+echo "Найденные JPG файлы:<br>";
+foreach ($matches[0] as $file) {
+    echo htmlspecialchars($file) . "<br>";
+}
+?>
+```
+
+## Задание 1.4
+```php
+<?php
+function isStrongPassword($password) {
+    // Проверка длины (минимум 6 символов)
+    if (strlen($password) < 6) return false;
+    
+    // Проверка наличия цифры
+    if (!preg_match('/\d/', $password)) return false;
+    
+    // Проверка наличия строчной буквы
+    if (!preg_match('/[a-z]/', $password)) return false;
+    
+    // Проверка наличия прописной буквы
+    if (!preg_match('/[A-Z]/', $password)) return false;
+    
+    return true;
+}
+
+// Пример использования в форме
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $password = $_POST['password'] ?? '';
+    
+    if (isStrongPassword($password)) {
+        echo "Пароль надежный!";
+    } else {
+        echo "Пароль не соответствует требованиям!";
+    }
+}
+?>
+
+<form method="post">
+    Введите пароль (от 6 символов, цифра, строчная и прописная буквы):<br>
+    <input type="password" name="password" required>
+    <button type="submit">Проверить</button>
+</form>
+```
+
+### Альтернативное решение для 1.4 (одним регулярным выражением):
+```php
+function isStrongPassword($password) {
+    return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/', $password);
+}
+```
+
+Это решение использует позитивные утверждения (positive lookaheads) для проверки наличия обязательных символов в пароле.
