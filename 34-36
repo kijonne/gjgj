@@ -1,0 +1,336 @@
+# Решение практических работ №34, №35, №36 на PHP 5.3.13
+
+## Практическая работа №34: Разработка объектов на PHP
+
+```php
+<?php
+// Задание 5.1 и 5.4
+class User {
+    public $login;
+    private $password;
+    protected $email;
+    
+    public static $zagolovok = 'h1';
+    const welcome = 'Добро пожаловать';
+    
+    // Задание 5.3 - конструктор с параметрами по умолчанию
+    public function __construct($login = 'user', $password = '12345', $email = '') {
+        $this->login = $login;
+        $this->password = $password;
+        $this->email = $email;
+    }
+    
+    // Задание 5.1 - метод hello
+    public function hello() {
+        echo "<" . self::$zagolovok . ">" . self::welcome . ", " . $this->login . "</" . self::$zagolovok . ">";
+    }
+}
+
+// Задание 5.2 - создание объекта, изменение логина и вызов метода
+$user1 = new User();
+$user1->login = 'admin';
+$user1->hello();
+
+echo "<br>";
+
+// Задание 5.3 - создание объектов с конструктором
+$user2 = new User('testuser', 'qwerty', 'test@example.com');
+$user2->hello();
+
+echo "<br>";
+
+$user3 = new User(); // с параметрами по умолчанию
+$user3->hello();
+
+echo "<br>";
+
+// Задание 5.4 - изменение статической переменной
+User::$zagolovok = 'h3';
+$user4 = new User('guest');
+$user4->hello();
+?>
+```
+
+## Практическая работа №35: Разработка веб-форм
+
+### 5.1 Форма авторизации (login.html)
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Форма авторизации</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h2>Авторизация</h2>
+    <form action="login.php" method="post">
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" required><br><br>
+        
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <input type="submit" value="ОК">
+    </form>
+</body>
+</html>
+```
+
+### 5.2 Форма регистрации (register.html)
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Форма регистрации</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h2>Регистрация</h2>
+    <form action="register.php" method="post">
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" required><br><br>
+        
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <label for="confirm_password">Подтверждение пароля:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required><br><br>
+        
+        <input type="checkbox" id="agree" name="agree" required>
+        <label for="agree">Я согласен с правилами</label><br><br>
+        
+        <input type="submit" value="ОК">
+    </form>
+</body>
+</html>
+```
+
+### 5.3 Форма тестирования (test1.html)
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест с переключателями</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h2>Тестирование</h2>
+    <form action="test1.php" method="get">
+        <p>
+            1. Какой тег используется для создания заголовка первого уровня?<br>
+            <input type="radio" name="q1" value="1"> &lt;h1&gt;<br>
+            <input type="radio" name="q1" value="2"> &lt;head&gt;<br>
+            <input type="radio" name="q1" value="3"> &lt;header&gt;
+        </p>
+        
+        <p>
+            2. Какой язык является серверным?<br>
+            <input type="radio" name="q2" value="1"> PHP<br>
+            <input type="radio" name="q2" value="2"> JavaScript<br>
+            <input type="radio" name="q2" value="3"> HTML
+        </p>
+        
+        <p>
+            3. Какой метод передает данные в URL?<br>
+            <input type="radio" name="q3" value="1"> POST<br>
+            <input type="radio" name="q3" value="2"> GET<br>
+            <input type="radio" name="q3" value="3"> PUT
+        </p>
+        
+        <p>
+            4. Какой тег создает абзац?<br>
+            <input type="radio" name="q4" value="1"> &lt;br&gt;<br>
+            <input type="radio" name="q4" value="2"> &lt;div&gt;<br>
+            <input type="radio" name="q4" value="3"> &lt;p&gt;
+        </p>
+        
+        <input type="submit" name="submit" value="Показать результат">
+        <input type="reset" value="Очистить"><br><br>
+        
+        <label for="result">Количество правильных ответов:</label>
+        <input type="text" id="result" name="result" readonly>
+    </form>
+</body>
+</html>
+```
+
+### 5.4 Форма тестирования с разными элементами (test2.html)
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест с разными элементами</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h2>Тестирование</h2>
+    <form action="test2.php" method="get">
+        <p>
+            1. Какой тег используется для создания заголовка первого уровня?<br>
+            <input type="radio" name="q1" value="1"> &lt;h1&gt;<br>
+            <input type="radio" name="q1" value="2"> &lt;head&gt;<br>
+            <input type="radio" name="q1" value="3"> &lt;header&gt;
+        </p>
+        
+        <p>
+            2. Выберите логотип HTML5:<br>
+            <input type="radio" name="q2" value="1"> <img src="img1.png" alt="Option 1" width="50"><br>
+            <input type="radio" name="q2" value="2"> <img src="img2.png" alt="Option 2" width="50"><br>
+            <input type="radio" name="q2" value="3"> <img src="img3.png" alt="Option 3" width="50">
+        </p>
+        
+        <p>
+            3. Какой метод передает данные в URL?<br>
+            <select name="q3">
+                <option value="1">POST</option>
+                <option value="2">GET</option>
+                <option value="3">PUT</option>
+            </select>
+        </p>
+        
+        <p>
+            4. Какие теги являются блочными? (Выберите 2)<br>
+            <input type="checkbox" name="q4[]" value="1"> &lt;div&gt;<br>
+            <input type="checkbox" name="q4[]" value="2"> &lt;span&gt;<br>
+            <input type="checkbox" name="q4[]" value="3"> &lt;p&gt;
+        </p>
+        
+        <input type="submit" name="submit" value="Показать результат">
+        <input type="reset" value="Очистить"><br><br>
+        
+        <label for="result">Количество правильных ответов:</label>
+        <input type="text" id="result" name="result" readonly>
+    </form>
+</body>
+</html>
+```
+
+## Практическая работа №36: Передача данных между веб-страницами
+
+### 5.1 Обработка формы авторизации (login.php)
+```php
+<?php
+// Массив пользователей (в реальном приложении данные хранятся в БД)
+$users = array(
+    'admin' => '12345',
+    'user1' => 'password1',
+    'user2' => 'password2'
+);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $login = isset($_POST['login']) ? $_POST['login'] : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    
+    if (array_key_exists($login, $users) && $users[$login] == $password) {
+        echo "<h1>Добро пожаловать, $login!</h1>";
+    } else {
+        echo "<h1>Пользователь с указанными данными не найден</h1>";
+    }
+}
+?>
+```
+
+### 5.2 Обработка формы регистрации (register.php)
+```php
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $login = isset($_POST['login']) ? $_POST['login'] : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+    $agree = isset($_POST['agree']) ? $_POST['agree'] : '';
+    
+    if (!empty($login) && !empty($password) && !empty($confirm_password) && $agree && 
+        $password == $confirm_password) {
+        echo "<h1>Вы зарегистрированы, $login!</h1>";
+    } else {
+        echo "<h1>Данные некорректны</h1>";
+    }
+}
+?>
+```
+
+### 5.3 Обработка формы тестирования (test1.php)
+```php
+<?php
+// Правильные ответы
+$correct_answers = array(
+    'q1' => '1', // h1
+    'q2' => '1', // PHP
+    'q3' => '2', // GET
+    'q4' => '3'  // p
+);
+
+$score = 0;
+
+// Проверяем каждый вопрос
+foreach ($correct_answers as $question => $correct) {
+    if (isset($_GET[$question]) && $_GET[$question] == $correct) {
+        $score++;
+    }
+}
+
+echo "<h1>Количество правильных ответов: $score</h1>";
+?>
+```
+
+### 5.4 Обработка формы тестирования с разными элементами (test2.php)
+```php
+<?php
+// Правильные ответы
+$correct_answers = array(
+    'q1' => '1', // h1
+    'q2' => '1', // первое изображение (предположительно)
+    'q3' => '2', // GET
+    'q4' => array('1', '3') // div и p
+);
+
+$score = 0;
+
+// Проверка вопросов 1-3 (radio и select)
+for ($i = 1; $i <= 3; $i++) {
+    $question = 'q' . $i;
+    if (isset($_GET[$question]) {
+        if ($i != 4 && $_GET[$question] == $correct_answers[$question]) {
+            $score++;
+        }
+    }
+}
+
+// Проверка вопроса 4 (checkbox)
+if (isset($_GET['q4'])) {
+    $user_answers = $_GET['q4'];
+    $correct_checkboxes = $correct_answers['q4'];
+    
+    // Проверяем, что пользователь выбрал ровно 2 ответа и они правильные
+    if (count($user_answers) == 2 && 
+        count(array_diff($user_answers, $correct_checkboxes)) == 0) {
+        $score++;
+    }
+}
+
+echo "<h1>Количество правильных ответов: $score</h1>";
+?>
+```
+
+## Ответы на контрольные вопросы
+
+### Практическая работа №34:
+1. ООП (Объектно-Ориентированное Программирование) - это парадигма программирования, основанная на концепции объектов, которые содержат данные и методы для работы с ними.
+2. Синтаксис объявления класса: `class ClassName { ... }`
+3. Доступ к данным объекта: `$object->property`
+4. Доступ к функциям объекта: `$object->method()`
+5. Форма конструктора: `public function __construct(params) { ... }`
+
+### Практическая работа №35:
+1. Для создания веб-форм применяется тег `<form>`
+2. Элементы управления: `<input>`, `<select>`, `<textarea>`, `<button>`
+3. Переключатель создается: `<input type="radio" name="group" value="value">`
+4. Флажок создается: `<input type="checkbox" name="name" value="value">`
+5. Поле ввода: `<input type="text" name="name">`
+6. Выпадающий список: `<select name="name"><option value="value">Text</option></select>`
+
+### Практическая работа №36:
+1. Методы передачи данных: GET и POST
+2. GET передает данные в URL, POST - в теле запроса. GET имеет ограничения по длине, POST - нет.
+3. Метод указывается в атрибуте method тега form: `<form method="get|post">`
+4. Параметры GET отображаются в URL после знака вопроса: `page.php?param1=value1&param2=value2`
