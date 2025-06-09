@@ -1,0 +1,325 @@
+### Решение заданий лабораторной работы №45
+
+#### **5.1 Создание слоя доступа к данным (DAL)**
+1. **Создайте набор проектов в Visual Studio:**
+   - Проект библиотеки для работы с MSSQL (`MSSQL_DAL`).
+   - Проект библиотеки для работы с SQLite (`SQLite_DAL`).
+   - Консольное приложение (`ClientApp`) для тестирования.
+
+2. **Добавьте NuGet-пакеты:**
+   - Для `MSSQL_DAL`: `Microsoft.Data.SqlClient`.
+   - Для `SQLite_DAL`: `Microsoft.Data.Sqlite`.
+
+3. **Реализация классов `DataAccessLayer`:**
+
+   **Для MSSQL:**
+   ```csharp
+   using Microsoft.Data.SqlClient;
+   using System;
+
+   namespace MSSQL_DAL
+   {
+       public static class DataAccessLayer
+       {
+           public static string ServerName { get; set; } = "mssql";
+           public static string DatabaseName { get; set; } = "master";
+           public static string UserName { get; set; } = "isppXXNN";
+           public static string Password { get; set; } = "XXNN";
+
+           public static string ConnectionString
+           {
+               get
+               {
+                   var builder = new SqlConnectionStringBuilder
+                   {
+                       DataSource = ServerName,
+                       InitialCatalog = DatabaseName,
+                       UserID = UserName,
+                       Password = Password,
+                       IntegratedSecurity = false
+                   };
+                   return builder.ConnectionString;
+               }
+           }
+       }
+   }
+   ```
+
+   **Для SQLite:**
+   ```csharp
+   using Microsoft.Data.Sqlite;
+   using System;
+
+   namespace SQLite_DAL
+   {
+       public static class DataAccessLayer
+       {
+           public static string DatabaseFile { get; set; } = "GamesStore.sqlite";
+
+           public static string ConnectionString
+           {
+               get
+               {
+                   var builder = new SqliteConnectionStringBuilder
+                   {
+                       DataSource = DatabaseFile
+                   };
+                   return builder.ConnectionString;
+               }
+           }
+       }
+   }
+   ```
+
+4. **Проверка строки подключения в `ClientApp`:**
+   ```csharp
+   using MSSQL_DAL;
+   using SQLite_DAL;
+   using System;
+
+   class Program
+   {
+       static void Main()
+       {
+           Console.WriteLine("MSSQL Connection String: " + DataAccessLayer.ConnectionString);
+           Console.WriteLine("SQLite Connection String: " + DataAccessLayer.ConnectionString);
+       }
+   }
+   ```
+
+---
+
+#### **5.2 Метод `GetScalarValue`**
+1. **Добавьте метод в классы DAL:**
+
+   **Для MSSQL:**
+   ```csharp
+   public static object GetScalarValue(string sqlCommand)
+   {
+       try
+       {
+           using (var connection = new SqlConnection(ConnectionString))
+           {
+               connection.Open();
+               using (var command = new SqlCommand(sqlCommand, connection))
+               {
+                   return command.ExecuteScalar();
+               }
+           }
+       }
+       catch (Exception ex)
+       {
+           Console.WriteLine($"Ошибка: {ex.Message}");
+           return null;
+       }
+   }
+   ```
+
+   **Для SQLite:**
+   ```csharp
+   public static object GetScalarValue(string sqlCommand)
+   {
+       try
+       {
+           using (var connection = new SqliteConnection(ConnectionString))
+           {
+               connection.Open();
+               using (var command = new SqliteCommand(sqlCommand, connection))
+               {
+                   return command.ExecuteScalar();
+               }
+           }
+       }
+       catch (Exception ex)
+       {
+           Console.WriteLine($"Ошибка: {ex.Message}");
+           return null;
+       }
+   }
+   ```
+
+2. **Проверка метода в `ClientApp`:**
+   ```csharp
+   Console.Write("Введите SQL-запрос (например, SELECT COUNT(*) FROM Games): ");
+   string query = Console.ReadLine();
+   object result = DataAccessLayer.GetScalarValue(query);
+   Console.WriteLine($"Результат: {result}");
+   ```
+
+---
+
+#### **5.3 Свойство `Games`**
+1. **Создайте класс `Game`:**
+   ```csharp
+   public class Game
+   {
+       public int Id { get; set; }
+       public string Title { get; set; }
+       public double Price { get; set; }
+   }
+   ```
+
+2. **Добавьте свойство в классы DAL:**
+
+   **Для MSSQL:**
+   ```csharp
+   public static List<Game> Games
+   {
+       get
+       {
+           var games = new List<Game>();
+           try
+           {
+               using (var connection = new SqlConnection(ConnectionString))
+               {
+                   connection.Open();
+                   using (var command = new SqlCommand("SELECT * FROM Games", connection))
+                   using (var reader = command.ExecuteReader())
+                   {
+                       while (reader.Read())
+                       {
+                           games.Add(new Game
+                           {
+                               Id = reader.GetInt32(0),
+                               Title = reader.GetString(1),
+                               Price = reader.GetDouble(2)
+                           });
+                       }
+                   }
+               }
+           }
+           catch (Exception ex)
+           {
+               Console.WriteLine($"Ошибка: {ex.Message}");
+           }
+           return games;
+       }
+   }
+   ```
+
+   **Для SQLite:**
+   ```csharp
+   public static List<Game> Games
+   {
+       get
+       {
+           var games = new List<Game>();
+           try
+           {
+               using (var connection = new SqliteConnection(ConnectionString))
+               {
+                   connection.Open();
+                   using (var command = new SqliteCommand("SELECT * FROM Games", connection))
+                   using (var reader = command.ExecuteReader())
+                   {
+                       while (reader.Read())
+                       {
+                           games.Add(new Game
+                           {
+                               Id = reader.GetInt32(0),
+                               Title = reader.GetString(1),
+                               Price = reader.GetDouble(2)
+                           });
+                       }
+                   }
+               }
+           }
+           catch (Exception ex)
+           {
+               Console.WriteLine($"Ошибка: {ex.Message}");
+           }
+           return games;
+       }
+   }
+   ```
+
+3. **Проверка свойства в `ClientApp`:**
+   ```csharp
+   var games = DataAccessLayer.Games;
+   foreach (var game in games)
+   {
+       Console.WriteLine($"ID: {game.Id}, Название: {game.Title}, Цена: {game.Price}");
+   }
+   ```
+
+---
+
+#### **5.4 Метод для выборки `DataTable`**
+1. **Добавьте метод в классы DAL:**
+
+   **Для MSSQL:**
+   ```csharp
+   using System.Data;
+
+   public static DataTable GetDataTable(string sqlCommand)
+   {
+       var dataTable = new DataTable();
+       try
+       {
+           using (var connection = new SqlConnection(ConnectionString))
+           {
+               connection.Open();
+               using (var adapter = new SqlDataAdapter(sqlCommand, connection))
+               {
+                   adapter.Fill(dataTable);
+               }
+           }
+       }
+       catch (Exception ex)
+       {
+           Console.WriteLine($"Ошибка: {ex.Message}");
+       }
+       return dataTable;
+   }
+   ```
+
+   **Для SQLite:**
+   ```csharp
+   using System.Data;
+
+   public static DataTable GetDataTable(string sqlCommand)
+   {
+       var dataTable = new DataTable();
+       try
+       {
+           using (var connection = new SqliteConnection(ConnectionString))
+           {
+               connection.Open();
+               using (var command = new SqliteCommand(sqlCommand, connection))
+               using (var reader = command.ExecuteReader())
+               {
+                   dataTable.Load(reader);
+               }
+           }
+       }
+       catch (Exception ex)
+       {
+           Console.WriteLine($"Ошибка: {ex.Message}");
+       }
+       return dataTable;
+   }
+   ```
+
+2. **Проверка метода в `ClientApp`:**
+   ```csharp
+   Console.Write("Введите SQL-запрос (например, SELECT * FROM Games): ");
+   string query = Console.ReadLine();
+   DataTable table = DataAccessLayer.GetDataTable(query);
+
+   foreach (DataRow row in table.Rows)
+   {
+       foreach (DataColumn col in table.Columns)
+       {
+           Console.Write($"{col.ColumnName}: {row[col]} | ");
+       }
+       Console.WriteLine();
+   }
+   ```
+
+---
+
+### Ответы на контрольные вопросы:
+1. **`SqlConnection`** — класс для установки соединения с БД MSSQL.
+2. **Считать одно значение** — использовать метод `ExecuteScalar()`.
+3. **`SqlDataReader`** — класс для чтения данных в режиме «только вперед».
+4. **Пространства имен для MSSQL** — `Microsoft.Data.SqlClient`, `
