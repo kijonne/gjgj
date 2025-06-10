@@ -1,0 +1,125 @@
+### Решение заданий практической работы №13
+
+#### 5.1 Выборка книг жанра "проза" с ценой от 500 до 1000 рублей
+```sql
+SELECT *
+FROM Books
+WHERE Genre = 'проза'
+  AND Price BETWEEN 500 AND 1000;
+```
+
+#### 5.2 Выборка ФИО и телефона покупателей с указанным телефоном
+```sql
+SELECT LastName, FirstName, Phone
+FROM Customers
+WHERE Phone IS NOT NULL;
+```
+
+#### 5.3 Выборка книг, содержащих определенный текст в названии
+```sql
+-- Например, ищем книги с текстом "война" в названии
+SELECT *
+FROM Books
+WHERE Title LIKE '%война%';
+```
+
+#### 5.4 Выборка книг, названия которых начинаются с определенной буквы
+```sql
+-- Например, ищем книги на букву "А"
+SELECT Title
+FROM Books
+WHERE Title LIKE 'А%';
+```
+
+#### 5.5 Страны с количеством авторов > 1
+```sql
+SELECT Country, COUNT(*) AS AuthorCount
+FROM Authors
+GROUP BY Country
+HAVING COUNT(*) > 1;
+```
+
+#### 5.6 Заказы с количеством книг > 5
+```sql
+SELECT OrderID, SUM(Quantity) AS TotalBooks
+FROM OrderDetails
+GROUP BY OrderID
+HAVING SUM(Quantity) > 5;
+```
+
+#### 5.7 Авторы с количеством книг > 1 по каждому названию
+```sql
+SELECT 
+    a.AuthorID,
+    b.Title,
+    COUNT(*) AS BookCount
+FROM Authors a
+JOIN AuthorBooks ab ON a.AuthorID = ab.AuthorID
+JOIN Books b ON ab.BookID = b.BookID
+GROUP BY a.AuthorID, b.Title
+HAVING COUNT(*) > 1;
+```
+
+---
+
+### Ответы на контрольные вопросы:
+
+1. **После WHERE указывается:**  
+   Условие фильтрации строк перед группировкой (например, `WHERE Price > 100`).
+
+2. **После HAVING указывается:**  
+   Условие фильтрации групп после группировки (например, `HAVING COUNT(*) > 5`).
+
+3. **Отличие WHERE и HAVING:**  
+   - `WHERE` фильтрует строки до группировки.  
+   - `HAVING` фильтрует результаты после группировки.  
+   Пример:  
+   ```sql
+   SELECT Genre, AVG(Price) 
+   FROM Books 
+   WHERE Year > 2000          -- Фильтр строк
+   GROUP BY Genre 
+   HAVING AVG(Price) > 500;   -- Фильтр групп
+   ```
+
+4. **После IN указывается:**  
+   Список значений для сравнения (например, `WHERE Country IN ('Россия', 'Беларусь')`).
+
+5. **После LIKE указывается:**  
+   Шаблон строки с использованием:  
+   - `%` — любое количество символов.  
+   - `_` — один символ.  
+   Пример: `WHERE Title LIKE 'А%'` (начинается на "А").
+
+6. **После BETWEEN указывается:**  
+   Диапазон значений (например, `WHERE Price BETWEEN 500 AND 1000`).
+
+---
+
+### Примеры тестовых данных для проверки запросов:
+```sql
+-- Создание таблиц
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY,
+    Title NVARCHAR(100),
+    Genre NVARCHAR(50),
+    Price DECIMAL(10,2),
+    Year INT
+);
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    LastName NVARCHAR(50),
+    FirstName NVARCHAR(50),
+    Phone NVARCHAR(20)
+);
+
+-- Вставка данных
+INSERT INTO Books VALUES 
+(1, 'Война и мир', 'проза', 750, 1869),
+(2, 'Анна Каренина', 'проза', 600, 1877);
+
+INSERT INTO Customers VALUES
+(1, 'Иванов', 'Петр', '+79001234567'),
+(2, 'Петрова', 'Мария', NULL);
+```
